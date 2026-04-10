@@ -14,20 +14,10 @@ def _compute_score(env):
         total_cpu >= env.workload.min_total_cpu_cores
     )
     budget_ok = env.remaining_budget_dollars >= 0
-    # Simple linear combination
-    score = 0.0
-    if workload_met:
-        score += 0.6
-    if budget_ok:
-        score += 0.3
-    # Small bonus for using fewer servers than max allowed (encourage efficiency)
-    if len(env.active_servers) <= 3:
-        score += 0.1
-    if score <= 0.0:
-        score = 0.01
-    if score >= 1.0:
-        score = 0.99
-    return score
+    if workload_met and budget_ok:
+        return 0.99
+    else:
+        return 0.01
 
 def grade_easy_task(env):
     """Grader for the easy task.
