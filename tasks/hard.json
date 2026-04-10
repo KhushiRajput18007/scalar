@@ -1,0 +1,28 @@
+{
+  "max_steps": 6,
+  "marketplace": [
+    {"server_id": "h-primary", "ram_gb": 16, "cpu_cores": 8, "price_per_month": 50.0},
+    {"server_id": "h-secondary-1", "ram_gb": 8, "cpu_cores": 4, "price_per_month": 30.0},
+    {"server_id": "h-secondary-2", "ram_gb": 8, "cpu_cores": 4, "price_per_month": 30.0}
+  ],
+  "initial_active_servers": [
+    {"server_id": "h-primary", "ram_gb": 16, "cpu_cores": 8, "price_per_month": 50.0},
+    {"server_id": "h-secondary-1", "ram_gb": 8, "cpu_cores": 4, "price_per_month": 30.0},
+    {"server_id": "h-secondary-2", "ram_gb": 8, "cpu_cores": 4, "price_per_month": 30.0}
+  ],
+  "initial_budget_dollars": 150.0,
+  "workload_req": {
+    "min_total_ram_gb": 16,
+    "min_total_cpu_cores": 8
+  },
+  "initial_event": "Everything is running smoothly. Your total budget constraint is $150.",
+  "price_spike_events": {
+    "3": {
+      "message": "PRICE SPIKE! All secondary server costs have doubled! Terminate unnecessary servers to stay under the $150 budget while meeting the 16GB RAM/8 CPU core workload.",
+      "new_prices": {
+        "h-secondary-1": 60.0,
+        "h-secondary-2": 60.0
+      }
+    }
+  }
+}

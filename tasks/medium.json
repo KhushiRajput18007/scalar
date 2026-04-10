@@ -1,0 +1,16 @@
+{
+  "max_steps": 8,
+  "marketplace": [
+    {"server_id": "m-1", "ram_gb": 2, "cpu_cores": 1, "price_per_month": 10.0},
+    {"server_id": "m-2", "ram_gb": 4, "cpu_cores": 2, "price_per_month": 25.0},
+    {"server_id": "m-3", "ram_gb": 8, "cpu_cores": 4, "price_per_month": 40.0},
+    {"server_id": "m-4", "ram_gb": 16, "cpu_cores": 8, "price_per_month": 70.0}
+  ],
+  "initial_active_servers": [],
+  "initial_budget_dollars": 100.0,
+  "workload_req": {
+    "min_total_ram_gb": 10,
+    "min_total_cpu_cores": 4
+  },
+  "initial_event": "Provision exactly 3 servers keeping the total monthly cost strictly under $100."
+}

@@ -1,0 +1,19 @@
+version: "1.0"
+environment:
+  name: "Cloud Cost Architect"
+  description: "An AI agent provisions and terminates cloud servers to meet software requirements while minimizing costs."
+  type: "python"
+  entrypoint: "env:CloudCostEnv"
+tasks:
+  easy:
+    description: "Single Server Provisioning - find cheapest server with 8GB RAM"
+    config_file: "tasks/easy.json"
+    grader: "graders.py:grade_easy_task"
+  medium:
+    description: "Budget Fleet - exactly 3 servers under $100"
+    config_file: "tasks/medium.json"
+    grader: "graders.py:grade_medium_task"
+  hard:
+    description: "Price Spike / Auto-Scaling - handle midway cost increase"
+    config_file: "tasks/hard.json"
+    grader: "graders.py:grade_hard_task"

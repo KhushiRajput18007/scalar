@@ -1,0 +1,11 @@
+name: scalarproject-rl
+build:
+  # Use Dockerfile in the repository
+  dockerfile: Dockerfile
+  # Optional: set hardware requirements
+  # gpu: false
+  # cpu: 2
+  # memory: 4GB
+runtime:
+  # Define the command to run the app (already set in Dockerfile entrypoint)
+  # No additional command needed
