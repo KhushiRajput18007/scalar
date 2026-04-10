@@ -8,9 +8,11 @@ from models import Action
 # Keep standard logging minimal so we don't pollute the requested output format
 logging.basicConfig(level=logging.ERROR)
 
-API_BASE_URL = os.environ.get("API_BASE_URL", "https://api.openai.com/v1")
-MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-4o-mini")
-API_KEY = os.environ.get("OPENAI_API_KEY", "dummy_key_not_checked")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
+MODEL_NAME   = os.getenv("MODEL_NAME", "meta-llama/Llama-3.1-8B-Instruct")
+HF_TOKEN     = os.getenv("HF_TOKEN")
+LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME")
+API_KEY      = HF_TOKEN or os.getenv("API_KEY", "dummy_key_not_checked")
 
 # If testing locally without an openai server, this would just fail. The environment
 # expects a standard openai compliant server available at API_BASE_URL.
