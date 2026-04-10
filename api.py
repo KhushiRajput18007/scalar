@@ -33,8 +33,10 @@ class ResetRequest(BaseModel):
     task: str = "easy" 
 
 @app.post("/reset", response_model=Observation)
-def reset_env(req: ResetRequest):
+def reset_env(req: ResetRequest = None):
     global current_env, current_task
+    if req is None:
+        req = ResetRequest(task="easy")
     task_file = f"tasks/{req.task}.json"
     try:
         with open(task_file, "r") as f:
