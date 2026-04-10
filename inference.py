@@ -57,7 +57,8 @@ def main():
             start_idx = action_text.find('{')
             end_idx = action_text.rfind('}') + 1
             if start_idx != -1 and end_idx != 0:
-                action_json = json.loads(action_text[start_idx:end_idx])
+                clean_json_str = action_text[start_idx:end_idx].replace("'", '"')
+                action_json = json.loads(clean_json_str)
                 action = Action(**action_json)
             else:
                 action = Action(command="WAIT") # Default fallback
