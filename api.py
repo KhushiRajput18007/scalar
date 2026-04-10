@@ -32,7 +32,7 @@ def get_root():
 class ResetRequest(BaseModel):
     task: str = "easy" 
 
-@app.post("/api/reset", response_model=Observation)
+@app.post("/reset", response_model=Observation)
 def reset_env(req: ResetRequest):
     global current_env, current_task
     task_file = f"tasks/{req.task}.json"
@@ -47,14 +47,14 @@ def reset_env(req: ResetRequest):
     obs = current_env.reset()
     return obs
 
-@app.get("/api/state", response_model=Observation)
+@app.get("/state", response_model=Observation)
 def get_state():
     global current_env
     if not current_env:
         reset_env(ResetRequest(task="easy"))
     return current_env.state()
 
-@app.post("/api/action", response_model=StepResponse)
+@app.post("/step", response_model=StepResponse)
 def take_action(action: Action):
     global current_env
     if not current_env:
