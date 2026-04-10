@@ -5,15 +5,15 @@ environment:
   type: "python"
   entrypoint: "env:CloudCostEnv"
 tasks:
-  easy:
+  - id: "easy"
     description: "Single Server Provisioning - find cheapest server with 8GB RAM"
     config_file: "tasks/easy.json"
     grader: "graders:grade_easy_task"
-  medium:
+  - id: "medium"
     description: "Budget Fleet - exactly 3 servers under $100"
     config_file: "tasks/medium.json"
     grader: "graders:grade_medium_task"
-  hard:
+  - id: "hard"
     description: "Price Spike / Auto-Scaling - handle midway cost increase"
     config_file: "tasks/hard.json"
     grader: "graders:grade_hard_task"
