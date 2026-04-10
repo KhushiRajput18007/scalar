@@ -3,7 +3,7 @@ from typing import Dict
 from env import CloudCostEnv
 from models import Observation, Reward
 
-def _compute_score(env: CloudCostEnv) -> float:
+def _compute_score(env):
     """Compute a deterministic score between 0.0 and 1.0 based on final state.
     The score rewards meeting workload requirements and staying within budget.
     """
@@ -27,22 +27,22 @@ def _compute_score(env: CloudCostEnv) -> float:
         score = 0.01
     if score >= 1.0:
         score = 0.99
-    return float(score)
+    return score
 
-def grade_easy_task(env: CloudCostEnv) -> float:
+def grade_easy_task(env):
     """Grader for the easy task.
-    Returns a float score between 0.0 and 1.0.
+    Returns a score between 0.0 and 1.0.
     """
     return _compute_score(env)
 
-def grade_medium_task(env: CloudCostEnv) -> float:
+def grade_medium_task(env):
     """Grader for the medium task.
-    Returns a float score between 0.0 and 1.0.
+    Returns a score between 0.0 and 1.0.
     """
     return _compute_score(env)
 
-def grade_hard_task(env: CloudCostEnv) -> float:
+def grade_hard_task(env):
     """Grader for the hard task.
-    Returns a float score between 0.0 and 1.0.
+    Returns a score between 0.0 and 1.0.
     """
     return _compute_score(env)
