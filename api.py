@@ -25,6 +25,10 @@ class StepResponse(BaseModel):
     reward: dict
     done: bool
 
+@app.get("/")
+def get_root():
+    return {"status": "ok", "message": "Cloud Cost Environment API is running. Access /docs for the API interface."}
+
 class ResetRequest(BaseModel):
     task: str = "easy" 
 
