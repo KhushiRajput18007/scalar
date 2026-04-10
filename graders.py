@@ -23,7 +23,7 @@ def _compute_score(env: CloudCostEnv) -> float:
     # Small bonus for using fewer servers than max allowed (encourage efficiency)
     if len(env.active_servers) <= 3:
         score += 0.1
-    return min(max(score, 0.0), 1.0)
+    return min(max(score, 0.01), 0.99)
 
 def grade_easy_task(env: CloudCostEnv) -> float:
     """Grader for the easy task.
