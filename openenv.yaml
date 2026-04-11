@@ -4,6 +4,15 @@ environment:
   description: "An AI agent provisions and terminates cloud servers to meet software requirements while minimizing costs."
   type: "python"
   entrypoint: "env:CloudCostEnv"
+evaluation:
+  tasks:
+    - name: "easy"
+      grader: "task_evaluators:grade_easy_task"
+    - name: "medium"
+      grader: "task_evaluators:grade_medium_task"
+    - name: "hard"
+      grader: "task_evaluators:grade_hard_task"
+
 tasks:
   - id: "easy"
     name: "Easy Task"
