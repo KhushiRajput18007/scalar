@@ -18,61 +18,85 @@ API_KEY      = HF_TOKEN or os.getenv("API_KEY", "dummy_key_not_checked")
 # expects a standard openai compliant server available at API_BASE_URL.
 client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
 
+def log_start(task: str, env: str, model: str) -> None:
+    print(f"[START] task={task} env={env} model={model}", flush=True)
+
+def log_step(step: int, action: str, reward: float, done: bool, error: str) -> None:
+    error_val = error if error else "null"
+    done_val = str(done).lower()
+    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={done_val} error={error_val}", flush=True)
+
+def log_end(success: bool, steps: int, score: float, rewards: list) -> None:
+    rewards_str = ",".join(f"{r:.2f}" for r in rewards)
+    print(f"[END] success={str(success).lower()} steps={steps} score={score:.3f} rewards={rewards_str}", flush=True)
+
 def main():
-    print("[START] Starting inference run", flush=True)
-    
     task_file = os.environ.get("TASK_FILE", "tasks/easy.json")
+    task_name = os.environ.get("TASK_NAME", "easy")
+    env_name = "CloudCostArchitect"
+    
     with open(task_file, "r") as f:
         config = json.load(f)
         
     env = CloudCostEnv(config)
     obs = env.reset()
     
-    # Prompt the model with the task definition
+    log_start(task=task_name, env=env_name, model=MODEL_NAME)
+
     messages = [
         {
             "role": "system", 
-            "content": "You are a Cloud Cost Architect. Your goal is to meet the workload requirement under budget. "
-                       "Output your action strictly in JSON format matching this schema: "
-                       "{'command': 'PROVISION' or 'TERMINATE' or 'WAIT' or 'SUBMIT', 'server_id': 'string_id'}. "
-                       "Use 'SUBMIT' when you are done."
+            "content": "You are a Cloud Cost Architect. Output your action strictly in JSON format: {'command': 'PROVISION' or 'TERMINATE' or 'WAIT' or 'SUBMIT', 'server_id': 'string_id'}."
         }
     ]
     
+    step_count = 0
+    rewards_history = []
+    
     while not env.done:
-        print(f"[STEP] Current observation: {obs.model_dump_json()}", flush=True)
+        step_count += 1
         messages.append({"role": "user", "content": f"Current Observation: {obs.model_dump_json()}"})
         
+        error_msg = None
+        action_str = ""
+        action_text = ""
         try:
             response = client.chat.completions.create(
                 model=MODEL_NAME,
                 messages=messages,
                 temperature=0.0
             )
-            
             action_text = response.choices[0].message.content
-            print(f"[STEP] Model raw action: {action_text}", flush=True)
-            
-            # Simple heuristic JSON parsing from output
             start_idx = action_text.find('{')
             end_idx = action_text.rfind('}') + 1
             if start_idx != -1 and end_idx != 0:
                 clean_json_str = action_text[start_idx:end_idx].replace("'", '"')
                 action_json = json.loads(clean_json_str)
                 action = Action(**action_json)
+                action_str = clean_json_str
             else:
-                action = Action(command="WAIT") # Default fallback
+                action = Action(command="WAIT")
+                action_str = '{"command": "WAIT"}'
                 
             messages.append({"role": "assistant", "content": action_text})
         except Exception as e:
-            print(f"[STEP] Error parsing action: {e}", flush=True)
+            error_msg = str(e)
             action = Action(command="WAIT")
+            action_str = '{"command": "WAIT"}'
 
-        print(f"[STEP] Parsed Action: {action.model_dump_json()}", flush=True)
-        obs, reward, env.done, info = env.step(action)
-        print(f"[STEP] Reward: {reward.model_dump_json()}", flush=True)
+        obs, reward_obj, env.done, info = env.step(action)
+        reward_float = reward_obj.score
+        
+        rewards_history.append(reward_float)
+        
+        log_step(step=step_count, action=action_str, reward=reward_float, done=env.done, error=error_msg)
 
-    print("[END] Inference completed", flush=True)
+    # Use grader to get total score between 0 and 1
+    from graders import _compute_score
+    final_score = _compute_score(env)
+    
+    success = final_score > 0.5
+    log_end(success=success, steps=step_count, score=final_score, rewards=rewards_history)
 
 if __name__ == "__main__":
     main()
