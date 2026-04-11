@@ -92,7 +92,7 @@ def main():
         log_step(step=step_count, action=action_str, reward=reward_float, done=env.done, error=error_msg)
 
     # Use grader to get total score between 0 and 1
-    from graders import _compute_score
+    from task_evaluators import _compute_score
     final_score = _compute_score(env)
     
     success = final_score > 0.5
