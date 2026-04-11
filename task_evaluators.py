@@ -3,6 +3,8 @@ from typing import Dict
 
 
 def _compute_score(env):
+    from env import CloudCostEnv
+    from models import Observation, Reward
     """Compute a deterministic score between 0.0 and 1.0 based on final state.
     The score rewards meeting workload requirements and staying within budget.
     """

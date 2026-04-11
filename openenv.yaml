@@ -1,6 +1,6 @@
+name: "scalarproject-rl"
 version: "1.0"
 environment:
-  name: "Cloud Cost Architect"
   description: "An AI agent provisions and terminates cloud servers to meet software requirements while minimizing costs."
   type: "python"
   entrypoint: "env:CloudCostEnv"
