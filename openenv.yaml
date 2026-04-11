@@ -6,15 +6,9 @@ environment:
   entrypoint: "env:CloudCostEnv"
 evaluation:
   tasks:
-    - id: "easy"
-      name: "Easy Task"
-      grader: "task_evaluators:grade_easy_task"
-    - id: "medium"
-      name: "Medium Task"
-      grader: "task_evaluators:grade_medium_task"
-    - id: "hard"
-      name: "Hard Task"
-      grader: "task_evaluators:grade_hard_task"
+    - "easy"
+    - "medium"
+    - "hard"
 
 tasks:
   - id: "easy"
