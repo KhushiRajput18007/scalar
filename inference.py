@@ -21,10 +21,12 @@ client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
 def log_start(task: str, env: str, model: str) -> None:
     print(f"[START] task={task} env={env} model={model}", flush=True)
 
-def log_step(step: int, action: str, reward: float, done: bool, error: str) -> None:
+def log_step(step: int, action: str, reward: float, done: bool, error: str, budget: float, event: str) -> None:
     error_val = error if error else "null"
     done_val = str(done).lower()
-    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={done_val} error={error_val}", flush=True)
+    event_val = event if event else "none"
+    # Enhanced STEP log as requested while maintaining standard prefixes
+    print(f"[STEP] step={step} action={action} budget={budget:.2f} event={event_val} reward={reward:.2f} done={done_val} error={error_val}", flush=True)
 
 def log_end(success: bool, steps: int, score: float, rewards: list) -> None:
     rewards_str = ",".join(f"{r:.2f}" for r in rewards)
@@ -43,6 +45,9 @@ def main():
     
     for task_name in tasks_to_run:
         task_file = f"tasks/{task_name}.json"
+        if not os.path.exists(task_file):
+            continue
+            
         with open(task_file, "r") as f:
             config = json.load(f)
             
@@ -67,7 +72,6 @@ def main():
             
             error_msg = None
             action_str = ""
-            action_text = ""
             try:
                 response = client.chat.completions.create(
                     model=MODEL_NAME,
@@ -97,7 +101,16 @@ def main():
             
             rewards_history.append(reward_float)
             
-            log_step(step=step_count, action=action_str, reward=reward_float, done=env.done, error=error_msg)
+            # Use the new info dictionary components for enhanced logging
+            log_step(
+                step=step_count, 
+                action=action_str, 
+                reward=reward_float, 
+                done=env.done, 
+                error=error_msg,
+                budget=info.get("budget_remaining", 0.0),
+                event=info.get("event", "none")
+            )
     
         # Use grader to get total score
         from task_evaluators import _compute_score

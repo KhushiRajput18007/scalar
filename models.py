@@ -6,6 +6,13 @@ class ServerDef(BaseModel):
     ram_gb: int
     cpu_cores: int
     price_per_month: float
+    
+    # Extended attributes with defaults for backward compatibility
+    latency: float = 0.0
+    availability: float = 1.0
+    region: str = "us-east"
+    startup_time: int = 1
+    running_cost: float = 1.0
 
 class WorkloadReq(BaseModel):
     min_total_ram_gb: int
@@ -17,6 +24,12 @@ class Observation(BaseModel):
     remaining_budget_dollars: float = Field(..., description="Your remaining budget.")
     workload: WorkloadReq = Field(..., description="Current system workload requirements.")
     event_message: Optional[str] = Field(None, description="System event notifications, if any.")
+    
+    # Extended tracking attributes with defaults
+    previous_actions: List[str] = []
+    previous_costs: List[float] = []
+    current_event: Optional[str] = None
+    step_count: int = 0
 
 class Action(BaseModel):
     command: Literal["PROVISION", "TERMINATE", "WAIT", "SUBMIT"] = Field(..., description="The command to execute.")
